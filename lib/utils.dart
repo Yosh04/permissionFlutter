@@ -28,6 +28,30 @@ void createFolder() async {
   }
 }
 
+
+ void createFolder2() async {
+  final externalDir = await getExternalStorageDirectory();
+  print(externalDir);
+  if (externalDir != null) {
+    final newFolder =
+        Directory('/storage/emulated/0/formularios');
+    if (await newFolder.exists()) {
+      print('folder already exist: ${newFolder.path}');
+    } else {
+      try {
+        await newFolder.create(recursive: true);
+        print('folder created: ${newFolder.path}');
+      } catch (e) {
+        print('mistake to create folder: $e');
+      }
+    }
+  } else {
+    print('cant access to storage');
+  }
+}
+
+
+
 void testdirectory() async {
   String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
   print(selectedDirectory);

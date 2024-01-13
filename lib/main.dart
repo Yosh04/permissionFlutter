@@ -20,22 +20,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the
-        //theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a blue toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
@@ -57,15 +41,19 @@ class _MyHomePageState extends State<MyHomePage> {
   int counter = 0;
   late Directory directoryFile;
 
-  
-
-
   @override
-  void initState() {
+  void initState()  {
     super.initState();
     //_checkPermission();
-    createFolder();
-    _checkPermission();
+    //createFolder();
+    _initPro();
+    
+  }
+
+
+  void _initPro() async{
+    await _checkPermission();
+    createFolder2();
   }
 
   ///Chequeador de permisos para la app.
@@ -79,7 +67,8 @@ class _MyHomePageState extends State<MyHomePage> {
       //Permission.manageExternalStorage.status;
     } else {
       print("Necesito pedir mis permisos.");
-      //await Permission.manageExternalStorage.request();
+      await Permission.manageExternalStorage.request();
+      //createFolder2();
       // Esto funciona para abrir la ventana de ajustes para los permisos.
       //openAppSettings();
     }
@@ -108,9 +97,31 @@ class _MyHomePageState extends State<MyHomePage> {
     await file.writeAsBytes(await pdf.save());
 
     print('PDF guardado en: ${file.path}');
-
   }
 
+    void _generateAndSavePDF2() async {
+
+    final externalDir = await getExternalStorageDirectory();
+    final newFolder =
+        Directory('/storage/emulated/0/formularios');
+
+    final pdf = pw.Document();
+
+      pdf.addPage(
+        pw.Page(
+          build: (pw.Context context) => pw.Center(
+            child:
+                pw.Text('¡Hola, este es un documento PDF generado en Flutter!'),
+          ),
+        ),
+      );
+
+    final file = File('${newFolder!.path}/ejemplo.pdf');
+    directoryFile = Directory('${externalDir!.path}/formularios/ejemplo.pdf');
+    await file.writeAsBytes(await pdf.save());
+
+    print('PDF guardado en: ${file.path}');
+  }
 
 
 
@@ -145,7 +156,8 @@ class _MyHomePageState extends State<MyHomePage> {
             IconButton(
                 onPressed: () async {
                   // _createFolder();
-                  _generateAndSavePDF();
+                  //_generateAndSavePDF();
+                  _generateAndSavePDF2();
                 },
                 icon: Icon(Icons.check)),
             IconButton(
