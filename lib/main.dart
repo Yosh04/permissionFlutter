@@ -94,13 +94,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
     final pdf = pw.Document();
 
-    pdf.addPage(
-      pw.Page(
-        build: (pw.Context context) => pw.Center(
-          child: pw.Text('¡Hola, este es un documento PDF generado en Flutter!'),
+      pdf.addPage(
+        pw.Page(
+          build: (pw.Context context) => pw.Center(
+            child:
+                pw.Text('¡Hola, este es un documento PDF generado en Flutter!'),
+          ),
         ),
-      ),
-    );
+      );
 
     final file = File('${newFolder!.path}/ejemplo.pdf');
     directoryFile = Directory('${externalDir!.path}/formularios/ejemplo.pdf');
@@ -147,15 +148,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   _generateAndSavePDF();
                 },
                 icon: Icon(Icons.check)),
-                IconButton(
-                onPressed: () async { 
+            IconButton(
+                onPressed: () async {
                   // _createFolder();
                   //openFile("${directoryFile.path}/ejemplo0.pdf");
                   pickFile(directoryFile.path);
 
                 },
                 icon: Icon(Icons.home)),
-                
 
             /*       
             IconButton(
