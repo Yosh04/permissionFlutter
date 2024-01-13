@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_pruebas/utils.dart';
 import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pdf/pdf.dart';
@@ -56,12 +57,14 @@ class _MyHomePageState extends State<MyHomePage> {
   int counter = 0;
   late Directory directoryFile;
 
+  
+
 
   @override
   void initState() {
     super.initState();
-    _checkPermission();
-    _createFolder();
+    //_checkPermission();
+    createFolder();
   }
 
   ///Chequeador de permisos para la app.
@@ -72,6 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (status.isGranted) {
       print("Ya los tengo");
+      Permission.manageExternalStorage.status;
     } else {
       print("Necesito pedir mis permisos.");
       await Permission.manageExternalStorage.request();
@@ -80,60 +84,13 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  ///Metodo para crear folders consultando si existen.
-  Future<void> _createFolder() async {
-    try {
-      var status = await Permission.manageExternalStorage.status;
-      print("Estado del permiso en crearFolder ${status.isGranted}");
+    void _generateAndSavePDF() async {
 
-      if (status.isGranted) {
-        final directory = await getApplicationDocumentsDirectory();
-        final folder = Directory('${directory.path}/documents');
-        if (!(await folder.exists())) {
-          await folder.create(recursive: true);
-          print('Carpeta creada en: ${folder.path}');
-          directoryFile = folder;
-        } else {
-          print('La carpeta ya existe en: ${folder.path}');
-          directoryFile = folder;
-        }
-      }
-    } catch (e) {
-      print('Error al crear la carpeta: $e');
-    }
-  }
+    final externalDir = await getExternalStorageDirectory();
+    final newFolder =
+        Directory('${externalDir!.path}/formularios');
+    
 
-  Future<void> _generateAndOpenPDF223(Directory directory) async {
-    final pdf = pw.Document();
-
-    // Añadir contenido al PDF
-    pdf.addPage(
-      pw.Page(
-        build: (pw.Context context) => pw.Center(
-          child: pw.Text('¡Hola, este es un documento PDF generado en Flutter!'),
-        ),
-      ),
-    );
-
-    // Obtener el directorio temporal
-    final tempDir = directory;
-    final tempPath = tempDir.path;
-
-    // Crear el archivo PDF temporal
-    final File tempPdfFile = File('$tempPath/ejemplo_temporal.pdf');
-    await tempPdfFile.writeAsBytes(await pdf.save());
-
-    // Imprimir la ruta del archivo guardado
-    //print('PDF temporal guardado en: ${tempPdfFile.path}');
-
-    // Abrir el archivo PDF temporal
-    print(tempPdfFile.existsSync());
-    //OpenFile.open(tempPdfFile.path);
-  }
-
-Future<void> generateAndSavePDF(Directory directory) async {
-  try {
-    final path = directory.path;
     final pdf = pw.Document();
 
     pdf.addPage(
@@ -144,48 +101,20 @@ Future<void> generateAndSavePDF(Directory directory) async {
       ),
     );
 
-    final File file = File('$path/ejemplo$counter.pdf');
+    final file = File('${newFolder!.path}/ejemplo.pdf');
+    directoryFile = Directory('${externalDir!.path}/formularios/ejemplo.pdf');
     await file.writeAsBytes(await pdf.save());
 
     print('PDF guardado en: ${file.path}');
-    openFile(file.path);
-  } catch (e) {
-    print('Error al generar y guardar el PDF: $e');
-  }
-}
 
-
-  List<Directory> getAllDocumetsPDF() {
-    return [];
-  }
-
-  Future<void> openFile(String filePath) async {
-    try {
-      print("entre al ultimo paso ");
-      print(filePath);
-      await OpenFile.open(filePath);
-    } catch (e) {
-      print('Error al abrir el archivo: $e');
-    }
   }
 
 
- Future<void> _printAllFilesInDocuments() async {
-    try {
-      final List<FileSystemEntity> files = directoryFile.listSync();
 
-      if (files.isNotEmpty) {
-        print('Archivos en el directorio documents:');
-        for (final FileSystemEntity file in files) {
-          print(file.uri.pathSegments.last);
-        }
-      } else {
-        print('No hay archivos en el directorio documents.');
-      }
-    } catch (e) {
-      print('Error al imprimir archivos: $e');
-    }
-  }
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -214,21 +143,15 @@ Future<void> generateAndSavePDF(Directory directory) async {
             IconButton(
                 onPressed: () async {
                   // _createFolder();
-                  print("impresión del directorio");
-                  print(directoryFile);
-
-                  _generateAndOpenPDF223(directoryFile);
-                  _printAllFilesInDocuments();
-                  //_createFolder();
-                  //checkPermission();
-
-                  //_checkPermission();
+                  _generateAndSavePDF();
                 },
                 icon: Icon(Icons.check)),
                 IconButton(
                 onPressed: () async { 
                   // _createFolder();
-                  openFile("${directoryFile.path}/ejemplo0.pdf");
+                  //openFile("${directoryFile.path}/ejemplo0.pdf");
+                  pickFile(directoryFile.path);
+
                 },
                 icon: Icon(Icons.home)),
                 
