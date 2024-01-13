@@ -56,7 +56,6 @@ class _MyHomePageState extends State<MyHomePage> {
   int counter = 0;
   late Directory directoryFile;
 
-
   @override
   void initState() {
     super.initState();
@@ -110,7 +109,8 @@ class _MyHomePageState extends State<MyHomePage> {
     pdf.addPage(
       pw.Page(
         build: (pw.Context context) => pw.Center(
-          child: pw.Text('¡Hola, este es un documento PDF generado en Flutter!'),
+          child:
+              pw.Text('¡Hola, este es un documento PDF generado en Flutter!'),
         ),
       ),
     );
@@ -131,29 +131,29 @@ class _MyHomePageState extends State<MyHomePage> {
     //OpenFile.open(tempPdfFile.path);
   }
 
-Future<void> generateAndSavePDF(Directory directory) async {
-  try {
-    final path = directory.path;
-    final pdf = pw.Document();
+  Future<void> generateAndSavePDF(Directory directory) async {
+    try {
+      final path = directory.path;
+      final pdf = pw.Document();
 
-    pdf.addPage(
-      pw.Page(
-        build: (pw.Context context) => pw.Center(
-          child: pw.Text('¡Hola, este es un documento PDF generado en Flutter!'),
+      pdf.addPage(
+        pw.Page(
+          build: (pw.Context context) => pw.Center(
+            child:
+                pw.Text('¡Hola, este es un documento PDF generado en Flutter!'),
+          ),
         ),
-      ),
-    );
+      );
 
-    final File file = File('$path/ejemplo$counter.pdf');
-    await file.writeAsBytes(await pdf.save());
+      final File file = File('$path/ejemplo$counter.pdf');
+      await file.writeAsBytes(await pdf.save());
 
-    print('PDF guardado en: ${file.path}');
-    openFile(file.path);
-  } catch (e) {
-    print('Error al generar y guardar el PDF: $e');
+      print('PDF guardado en: ${file.path}');
+      openFile(file.path);
+    } catch (e) {
+      print('Error al generar y guardar el PDF: $e');
+    }
   }
-}
-
 
   List<Directory> getAllDocumetsPDF() {
     return [];
@@ -169,8 +169,7 @@ Future<void> generateAndSavePDF(Directory directory) async {
     }
   }
 
-
- Future<void> _printAllFilesInDocuments() async {
+  Future<void> _printAllFilesInDocuments() async {
     try {
       final List<FileSystemEntity> files = directoryFile.listSync();
 
@@ -186,6 +185,7 @@ Future<void> generateAndSavePDF(Directory directory) async {
       print('Error al imprimir archivos: $e');
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -225,13 +225,12 @@ Future<void> generateAndSavePDF(Directory directory) async {
                   //_checkPermission();
                 },
                 icon: Icon(Icons.check)),
-                IconButton(
-                onPressed: () async { 
+            IconButton(
+                onPressed: () async {
                   // _createFolder();
                   openFile("${directoryFile.path}/ejemplo0.pdf");
                 },
                 icon: Icon(Icons.home)),
-                
 
             /*       
             IconButton(
