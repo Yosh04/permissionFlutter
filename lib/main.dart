@@ -65,6 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     //_checkPermission();
     createFolder();
+    _checkPermission();
   }
 
   ///Chequeador de permisos para la app.
@@ -75,10 +76,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (status.isGranted) {
       print("Ya los tengo");
-      Permission.manageExternalStorage.status;
+      //Permission.manageExternalStorage.status;
     } else {
       print("Necesito pedir mis permisos.");
-      await Permission.manageExternalStorage.request();
+      //await Permission.manageExternalStorage.request();
       // Esto funciona para abrir la ventana de ajustes para los permisos.
       //openAppSettings();
     }
