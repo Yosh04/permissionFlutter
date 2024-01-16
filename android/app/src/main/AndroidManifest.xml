@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Permissions options for the `manage external storage` group -->
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    
 
     <!-- Permissions options for the `storage` group -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
@@ -9,11 +9,12 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission-group.STORAGE"/>"
 
 
     <application
+        android:requestLegacyExternalStorage="true"
         android:label="flutter_pruebas"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">

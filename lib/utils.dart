@@ -2,16 +2,22 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:async';
+import 'package:pdf/widgets.dart' as pw;
 import 'package:open_file/open_file.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_pruebas/model.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 
 Timer? timer;
 
+late Directory directoryFile;
 void createFolder() async {
   final externalDir = await getExternalStorageDirectory();
   print(externalDir);
   if (externalDir != null) {
-    final newFolder =
-        Directory('${externalDir.path}/formularios');
+    final newFolder = Directory('${externalDir.path}/formularios');
 
     if (await newFolder.exists()) {
       print('folder already exist: ${newFolder.path}');
@@ -28,13 +34,11 @@ void createFolder() async {
   }
 }
 
-
- void createFolder2() async {
+void createFolder2() async {
   final externalDir = await getExternalStorageDirectory();
   print(externalDir);
   if (externalDir != null) {
-    final newFolder =
-        Directory('/storage/emulated/0/formularios');
+    final newFolder = Directory('/storage/emulated/0/formularios');
     if (await newFolder.exists()) {
       print('folder already exist: ${newFolder.path}');
     } else {
@@ -50,7 +54,47 @@ void createFolder() async {
   }
 }
 
+void _generateAndSavePDF() async {
+  final externalDir = await getExternalStorageDirectory();
+  final newFolder = Directory('${externalDir!.path}/formularios');
 
+  final pdf = pw.Document();
+
+  pdf.addPage(
+    pw.Page(
+      build: (pw.Context context) => pw.Center(
+        child: pw.Text('¡Hola, este es un documento PDF generado en Flutter!'),
+      ),
+    ),
+  );
+
+  final file = File('${newFolder!.path}/ejemplo.pdf');
+  directoryFile = Directory('${externalDir!.path}/formularios/ejemplo.pdf');
+  await file.writeAsBytes(await pdf.save());
+
+  print('PDF guardado en: ${file.path}');
+}
+
+void generateAndSavePDF2() async {
+  final externalDir = await getExternalStorageDirectory();
+  final newFolder = Directory('/storage/emulated/0/formularios');
+
+  final pdf = pw.Document();
+
+  pdf.addPage(
+    pw.Page(
+      build: (pw.Context context) => pw.Center(
+        child: pw.Text('¡Hola, este es un documento PDF generado en Flutter!'),
+      ),
+    ),
+  );
+
+  final file = File('${newFolder!.path}/ejemplo.pdf');
+  directoryFile = Directory('${externalDir!.path}/formularios/ejemplo.pdf');
+  await file.writeAsBytes(await pdf.save());
+
+  print('PDF guardado en: ${file.path}');
+}
 
 void testdirectory() async {
   String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
@@ -95,13 +139,10 @@ void pickFile(String filePath) async {
 Future<Directory?> getdirectory() async {
   final externalDir = await getExternalStorageDirectory();
   if (externalDir != null) {
-    final newFolder =
-        Directory('${externalDir.path}/formularios');
+    final newFolder = Directory('${externalDir.path}/formularios');
     return newFolder;
   } else {
     print('cant access to storage');
     return null;
   }
 }
-
-
