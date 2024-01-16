@@ -4,9 +4,11 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 class PermissionModel extends ChangeNotifier {
   bool _status = false;
+  late Timer _timer;
 
   bool get status => _status;
 
@@ -15,8 +17,36 @@ class PermissionModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<bool> startTimer() async {
+    bool check = false;
+    var version = await isAndroidTenOrLower();
+    if (version == true) {
+      print("rrrrrrrrrrrrrrrrrrrrrrrrrrr");
+      var permission = await Permission.storage.isGranted;
+      print("Estado del permisdo $permission");
+      if (permission == true) {
+        setStatusPermission = true;
+        check = true;
+      }
+    } else {
+      var permission = await Permission.manageExternalStorage.isGranted;
+      // Crear un temporizador que se ejecutará cada segundo
+      _timer = Timer.periodic(
+        const Duration(seconds: 1),
+        (timer) {
+          if (permission) {
+            setStatusPermission = true;
+            _timer.cancel();
+            print('Temporizador detenido');
+          }
+        },
+      );
+    }
+    return check;
+  }
+
   Future<void> initPermission() async {
-    var version = await _isAndroidTenOrLower();
+    var version = await isAndroidTenOrLower();
 
     if (version == true) {
       var permission = await Permission.storage.isGranted;
@@ -41,7 +71,7 @@ class PermissionModel extends ChangeNotifier {
   }
 
   Future<void> checkPermission() async {
-    var version = await _isAndroidTenOrLower();
+    var version = await isAndroidTenOrLower();
 
     if (version == true) {
       var permission = await Permission.storage.request();
@@ -76,7 +106,7 @@ class PermissionModel extends ChangeNotifier {
     }
   }
 
-  Future<bool> _isAndroidTenOrLower() async {
+  Future<bool> isAndroidTenOrLower() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
     int sdkInt = androidInfo.version.sdkInt;

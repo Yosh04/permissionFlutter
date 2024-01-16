@@ -24,6 +24,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final modelo = Provider.of<PermissionModel>(context);
     //modelo.checkPermission(modelo);
+
     return Scaffold(
       backgroundColor: Colors.black54,
       appBar: AppBar(
